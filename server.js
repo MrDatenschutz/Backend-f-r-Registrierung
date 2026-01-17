@@ -27,7 +27,7 @@ app.post("/register", (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.json({ success: false, error: "Benutzername und Passwort erforderlich" });
+    return res.status(400).json({ success: false, error: "Benutzername und Passwort erforderlich" });
   }
 
   const timestamp = new Date().toISOString().replace("T", " ").split(".")[0];
@@ -36,7 +36,7 @@ app.post("/register", (req, res) => {
   fs.appendFile(path.join(__dirname, "users.txt"), entry, (err) => {
     if (err) {
       console.error("Fehler beim Speichern:", err);
-      return res.json({ success: false, error: "Fehler beim Speichern" });
+      return res.status(500).json({ success: false, error: "Fehler beim Speichern" });
     }
 
     res.json({ success: true });
