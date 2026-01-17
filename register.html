@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrierung – Nexora</title>
+</head>
+<body>
+
+  <h1>Registrierung</h1>
+
+  <input id="username" placeholder="Benutzername"><br><br>
+  <input id="password" type="password" placeholder="Passwort"><br><br>
+  <button onclick="register()">Registrieren</button>
+
+  <p id="msg"></p>
+
+  <script>
+    async function register() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      if (!username || !password) {
+        document.getElementById("msg").innerText = "Bitte Benutzername und Passwort eingeben.";
+        return;
+      }
+
+      try {
+        const res = await fetch("http://localhost:3000/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+        document.getElementById("msg").innerText =
+          data.success ? "✅ Registrierung erfolgreich!" : `❌ Fehler: ${data.error}`;
+      } catch (err) {
+        document.getElementById("msg").innerText = "❌ Verbindung zum Server fehlgeschlagen.";
+      }
+    }
+  </script>
+
+</body>
+</html>
