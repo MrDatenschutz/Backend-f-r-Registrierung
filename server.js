@@ -1,27 +1,31 @@
 const express = require("express");
+const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// CORS aktivieren (wichtig für GitHub Pages → Render)
+app.use(cors());
+
 // JSON-Daten akzeptieren
 app.use(express.json());
 
-// Statische Dateien
+// Statische Dateien (HTML, CSS, JS, Bilder)
 app.use(express.static(__dirname));
 
-// Startseite
+// ➤ Startseite: register.html ausliefern
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "register.html"));
 });
 
-// Login-Seite
+// ➤ Login-Seite ausliefern
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "login.html"));
 });
 
-// Registrierung
+// ➤ Registrierung
 app.post("/register", (req, res) => {
   const { username, password } = req.body;
 
@@ -42,7 +46,7 @@ app.post("/register", (req, res) => {
   });
 });
 
-// Login
+// ➤ Login
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   const entry = `${username}:${password}`;
@@ -64,7 +68,7 @@ app.post("/login", (req, res) => {
   });
 });
 
-// Server starten
+// ➤ Server starten
 app.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);
 });
