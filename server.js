@@ -5,24 +5,23 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware für Formulardaten
-app.use(express.urlencoded({ extended: true }));
+// JSON-Daten akzeptieren
 app.use(express.json());
 
-// Statische Dateien (HTML, CSS, JS, Bilder)
+// Statische Dateien
 app.use(express.static(__dirname));
 
-// ➤ Startseite: register.html ausliefern
+// Startseite
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "register.html"));
 });
 
-// ➤ Login-Seite ausliefern
+// Login-Seite
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "login.html"));
 });
 
-// ➤ Registrierung
+// Registrierung
 app.post("/register", (req, res) => {
   const { username, password } = req.body;
 
@@ -43,7 +42,7 @@ app.post("/register", (req, res) => {
   });
 });
 
-// ➤ Login
+// Login
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   const entry = `${username}:${password}`;
@@ -65,7 +64,7 @@ app.post("/login", (req, res) => {
   });
 });
 
-// ➤ Server starten
+// Server starten
 app.listen(PORT, () => {
-  console.log(`✅ Server läuft auf Port ${PORT}`);
+  console.log(`Server läuft auf Port ${PORT}`);
 });
