@@ -5,16 +5,21 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Body-Parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Statische Dateien (HTML, CSS, JS)
 app.use(express.static(__dirname));
 
-// Startseite: register.html ausliefern
+
+// ➤ Startseite: register.html ausliefern
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "register.html"));
 });
 
-// Registrierung
+
+// ➤ Registrierung
 app.post("/register", (req, res) => {
   const { username, password } = req.body;
 
@@ -22,9 +27,8 @@ app.post("/register", (req, res) => {
     return res.json({ success: false, error: "Benutzername und Passwort erforderlich" });
   }
 
-  const stars = "*".repeat(password.length);
   const timestamp = new Date().toISOString().replace("T", " ").split(".")[0];
-  const entry = `[${timestamp}] Benutzername: ${username} | Passwort: ${stars}\n`;
+  const entry = `${username}:${password} // ${timestamp}\n`;
 
   fs.appendFile(path.join(__dirname, "users.txt"), entry, (err) => {
     if (err) {
@@ -36,7 +40,8 @@ app.post("/register", (req, res) => {
   });
 });
 
-// Login
+
+// ➤ Login
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
   const entry = `${username}:${password}`;
@@ -48,7 +53,7 @@ app.post("/login", (req, res) => {
     }
 
     const lines = data.split("\n");
-    const match = lines.find(line => line.includes(`Benutzername: ${username}`));
+    const match = lines.find(line => line.startsWith(entry));
 
     if (match) {
       res.send("Login erfolgreich");
@@ -58,7 +63,8 @@ app.post("/login", (req, res) => {
   });
 });
 
-// Server starten
+
+// ➤ Server starten
 app.listen(PORT, () => {
   console.log(`Server läuft auf Port ${PORT}`);
 });
