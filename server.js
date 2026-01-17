@@ -5,19 +5,22 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Body-Parser
+// Middleware für Formulardaten
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Statische Dateien (HTML, CSS, JS)
+// Statische Dateien (HTML, CSS, JS, Bilder)
 app.use(express.static(__dirname));
-
 
 // ➤ Startseite: register.html ausliefern
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "register.html"));
 });
 
+// ➤ Login-Seite ausliefern
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "login.html"));
+});
 
 // ➤ Registrierung
 app.post("/register", (req, res) => {
@@ -32,14 +35,13 @@ app.post("/register", (req, res) => {
 
   fs.appendFile(path.join(__dirname, "users.txt"), entry, (err) => {
     if (err) {
-      console.error(err);
+      console.error("Fehler beim Speichern:", err);
       return res.json({ success: false, error: "Fehler beim Speichern" });
     }
 
     res.json({ success: true });
   });
 });
-
 
 // ➤ Login
 app.post("/login", (req, res) => {
@@ -48,7 +50,7 @@ app.post("/login", (req, res) => {
 
   fs.readFile(path.join(__dirname, "users.txt"), "utf8", (err, data) => {
     if (err) {
-      console.error(err);
+      console.error("Fehler beim Lesen:", err);
       return res.status(500).send("Fehler beim Lesen");
     }
 
@@ -63,8 +65,7 @@ app.post("/login", (req, res) => {
   });
 });
 
-
 // ➤ Server starten
 app.listen(PORT, () => {
-  console.log(`Server läuft auf Port ${PORT}`);
+  console.log(`✅ Server läuft auf Port ${PORT}`);
 });
